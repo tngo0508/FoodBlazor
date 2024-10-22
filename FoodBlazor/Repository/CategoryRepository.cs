@@ -1,5 +1,6 @@
 ﻿using FoodBlazor.Data;
 using FoodBlazor.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace FoodBlazor.Repository;
 
@@ -11,39 +12,39 @@ public class CategoryRepository : ICategoryRepository
     {
         _db = db;
     }
-    public Category Create(Category category)
+    public async Task<Category> CreateAsync(Category category)
     {
         _db.Categories.Add(category);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
         return category;
     }
 
-    public Category Update(Category category)
+    public async Task<Category> UpdateAsync(Category category)
     {
-        var objFromDb = _db.Categories.FirstOrDefault(u => u.Id == category.Id);
+        var objFromDb = await _db.Categories.FirstOrDefaultAsync(u => u.Id == category.Id);
         if (objFromDb == null) return new Category();
         objFromDb.Name = category.Name;
         _db.Categories.Update(objFromDb);
-        _db.SaveChanges();
+        await _db.SaveChangesAsync();
         return objFromDb;
     }
 
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var obj = _db.Categories.FirstOrDefault(x => x.Id == id);
+        var obj = await _db.Categories.FirstOrDefaultAsync(x => x.Id == id);
         if (obj == null) return false;
         _db.Categories.Remove(obj);
-        return (_db.SaveChanges() > 0);
+        return (await _db.SaveChangesAsync() > 0);
     }
 
-    public Category Get(int id)
+    public async Task<Category> GetAsync(int id)
     {
-        var obj = _db.Categories.FirstOrDefault(x => x.Id == id);
+        var obj = await _db.Categories.FirstOrDefaultAsync(x => x.Id == id);
         return obj ?? new Category();
     }
 
-    public IEnumerable<Category> GetAll()
+    public async Task<IEnumerable<Category>> GetAllAsync()
     {
-        return _db.Categories.ToList();
+        return await _db.Categories.ToListAsync();
     }
 }
