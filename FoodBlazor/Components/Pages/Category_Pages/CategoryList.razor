@@ -41,14 +41,27 @@ else
 
 
 @code {
-    private bool IsProcessing { get; set; } = false;
+    private bool IsProcessing { get; set; } = true;
     private IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
-        IsProcessing = true;
-        await LoadCategories();
-        IsProcessing = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Check if this is the first time the component is being rendered
+        if (firstRender)
+        {
+            // Load the categories asynchronously
+            await LoadCategories();
+
+            // Set the processing flag to false after categories are loaded
+            IsProcessing = false;
+
+            // Notify the Blazor framework that the state has changed and the UI needs to be re-rendered
+            StateHasChanged();
+        }
     }
 
     private async Task LoadCategories()
