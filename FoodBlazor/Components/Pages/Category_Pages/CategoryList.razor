@@ -1,4 +1,5 @@
 ﻿@page "/Category"
+@inject ICategoryRepository CategoryRepository 
 
 @if (IsProcessing)
 {
@@ -10,16 +11,6 @@
 }
 else
 {
-    @* <div class="card shadow border-0 mt-4"> *@
-    @*     <div class="card-header bg-black bg-gradient ml-0 py-3"> *@
-    @*         <div class="row"> *@
-    @*             <div class="col-12 text-center"> *@
-    @*                 <h2 class="text-white py-2">Category List</h2> *@
-    @*             </div> *@
-    @*         </div> *@
-    @*     </div> *@
-    @* </div> *@
-
     <MudCard>
         <MudCardHeader Style="text-align:center;background-color:black;">
             <CardHeaderContent>
@@ -30,14 +21,28 @@ else
             <div style="display: flex;justify-content: flex-end;">
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary">Add New Category</MudButton>
             </div>
-            <p>Category List</p>
+            @if (Categories.Any())
+            {
+                <MudDataGrid Items="Categories" Filterable="false" SortMode="SortMode.None" Groupable="false" Bordered="true">
+                    <Columns>
+                        <PropertyColumn Property="x => x.Name"></PropertyColumn>
+                        <TemplateColumn>
+                            <CellTemplate>
+                                <MudButton Size="Size.Small" Variant="@Variant.Filled" Color="@Color.Primary">Button</MudButton>
+                            </CellTemplate>
+                        </TemplateColumn>
+                    </Columns>
+                </MudDataGrid>
+            }
+
         </MudCardContent>
     </MudCard>
 }
 
 
 @code {
-    public bool IsProcessing { get; set; } = false;
+    private bool IsProcessing { get; set; } = false;
+    private IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -49,7 +54,7 @@ else
 
     private void LoadCategories()
     {
-        return;
+        Categories = CategoryRepository.GetAll();
     }
 
 }
