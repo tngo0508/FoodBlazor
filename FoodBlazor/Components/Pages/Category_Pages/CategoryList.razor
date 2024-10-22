@@ -2,9 +2,11 @@
 
 @if (IsProcessing)
 {
-    <div class="position-absolute w-75 h-75 d-flex flex-column align-items-center bg-white justify-content-center">
-        <img src="~/img/loader.gif" alt="loading">
-    </div>
+    <MudContainer Class="d-flex vh-100" Style="position: relative;">
+        <div class="m-auto">
+            <img src="/img/loading.gif" alt="loading"/>
+        </div>
+    </MudContainer>
 }
 else
 {
@@ -17,7 +19,7 @@ else
     @*         </div> *@
     @*     </div> *@
     @* </div> *@
-    
+
     <MudCard>
         <MudCardHeader Style="text-align:center;background-color:black;">
             <CardHeaderContent>
@@ -27,7 +29,7 @@ else
         <MudCardContent>
             <div style="display: flex;justify-content: flex-end;">
                 <MudButton Variant="Variant.Filled" Color="Color.Secondary">Add New Category</MudButton>
-            </div> 
+            </div>
             <p>Category List</p>
         </MudCardContent>
     </MudCard>
@@ -36,5 +38,18 @@ else
 
 @code {
     public bool IsProcessing { get; set; } = false;
-    
+
+    protected override async Task OnInitializedAsync()
+    {
+        IsProcessing = true;
+        await Task.Delay(2000);
+        LoadCategories();
+        IsProcessing = false;
+    }
+
+    private void LoadCategories()
+    {
+        return;
+    }
+
 }
